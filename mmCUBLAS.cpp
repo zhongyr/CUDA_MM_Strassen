@@ -430,4 +430,7 @@ void myMM(size_t m, size_t n, size_t k,
         myMM_kernel<<<blocks, 256>>>
         (m,n,k,A,lda,B,ldb,c,ldc);
         cudaMemcpy(C,c,sizeof(float)*m*n,cudaMemcpyDevicetoHost);
+        cudaFree(a);
+        cudaFree(b);
+        cudaFree(c);
     }
