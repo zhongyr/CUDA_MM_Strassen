@@ -66,6 +66,16 @@
 #ifndef max
 #define max(a,b) ((a > b) ? a : b)
 #endif
+__global__ static void myMM_kernel(
+    size_t m, size_t n, size_t k,
+    const float* A, int lda,
+    const float* B, int ldb, 
+    float* C, int ldc); // multiplication kernel
+
+    void myMM(size_t m, size_t n, size_t k,
+    const float* A, int lda,
+    const float* B, int ldb, 
+    float* C, int ldc);// interface to invoke multiplication kernel
 
 typedef struct _matrixSize      // Optional Command-line multiplier for matrix sizes
 {
@@ -387,12 +397,37 @@ int main(int argc, char **argv)
 // My Multiplication Kernel
 /////////////////////////////////////////////////////////////////////////////////
 
-__global__ static void myMM(
+__global__ static void myMM_kernel(
     size_t m, size_t n, size_t k,
     const float* A, int lda,
     const float* B, int ldb, 
     float* C, int ldc){
-        
-     
+        const int tid = threadId.x;
+        const int bid = blockId.x;
+        const int idx = bid*blockDim.x+tid;
+        const int row = idx / n; // The row numer of matrix A;
+        const int collumn = idx % n; // The collumn number of matrix B;
+        if(row < m && collumn < n){
+            float t = 0;
+            for(i=0;i<k;i++){
+                t+=A[row*lda+i]*B[i*ldb+collumn];
+            }
+            c[row*ldc+collumn]=t;
+        }
 }
 
+void myMM(size_t m, size_t n, size_t k,
+    const float* A, int lda,
+    const float* B, int ldb, 
+    float* C, int ldc){
+        float *a,*b,*c;
+        cudaMalloc((void**)&a,sizeof(float)*m*k);
+        cudaMalloc((void**)&b,sizeof(float)*k*n);
+        cudaMalloc((void**)&c,sizeof(float)*m*n);
+        cudaMemcpy(a,A,sizeof(float)*m*k,cudaMemcpyHostToDevice);
+        cudaMemcpy(b,B,sizeof(float)*k*n,cudaMemcpyHostToDevice);
+        int blocks = m*n/256;
+        myMM_kernel<<<blocks, 256>>>
+        (m,n,k,A,lda,B,ldb,c,ldc);
+        cudaMemcpy(C,c,sizeof(float)*m*n,cudaMemcpyDevicetoHost);
+    }
