@@ -89,7 +89,11 @@ LIBRARIES += -lcublas
 # Target rules
 all: build
 
+<<<<<<< HEAD
 build: mmCUBLAS
+=======
+build: mmCUBLAS mmNaive
+>>>>>>> aac4b75c4cda79d2635d347ec2cd1b09f4e0207e
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -98,6 +102,7 @@ else
 	@echo "Sample is ready - all dependencies have been met"
 endif
 
+<<<<<<< HEAD
 mmCUBLAS.o:mmCUBLAS.cpp
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
@@ -107,6 +112,25 @@ mmCUBLAS.o:mmCUBLAS.cpp
 mmCUBLAS: mmCUBLAS.o
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 
+=======
+#mmCUBLAS.o:mmCUBLAS.cpp
+#	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+
+mmCUBLAS.o:mmCUBLAS.cu
+	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+
+mmCUBLAS: mmCUBLAS.o
+	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+
+mmNaive.o:mmNaive.cu
+	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+
+mmNaive: mmNaive.o 
+	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+
+
+
+>>>>>>> aac4b75c4cda79d2635d347ec2cd1b09f4e0207e
 run: build
 	$(EXEC) ./mmCUBLAS
 
