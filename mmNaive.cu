@@ -66,6 +66,7 @@
 #ifndef max
 #define max(a,b) ((a > b) ? a : b)
 #endif
+int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size);
 __global__ static void myMM_kernel(
     size_t m, size_t n, size_t k,
     const float* A, int lda,
