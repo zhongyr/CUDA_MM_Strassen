@@ -66,22 +66,23 @@
 #ifndef max
 #define max(a,b) ((a > b) ? a : b)
 #endif
+
+
+    /*void myMM(size_t m, size_t n, size_t k,
+    const float* A, int lda,
+    const float* B, int ldb, 
+    float* C, int ldc);// interface to invoke multiplication kernel*/
+
+typedef struct _matrixSize      // Optional Command-line multiplier for matrix sizes
+{
+    unsigned int uiWA, uiHA, uiWB, uiHB, uiWC, uiHC;
+} sMatrixSize;
 int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size);
 __global__ static void myMM_kernel(
     size_t m, size_t n, size_t k,
     const float* A, int lda,
     const float* B, int ldb, 
     float* C, int ldc); // multiplication kernel
-
-    void myMM(size_t m, size_t n, size_t k,
-    const float* A, int lda,
-    const float* B, int ldb, 
-    float* C, int ldc);// interface to invoke multiplication kernel
-
-typedef struct _matrixSize      // Optional Command-line multiplier for matrix sizes
-{
-    unsigned int uiWA, uiHA, uiWB, uiHB, uiWC, uiHC;
-} sMatrixSize;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Compute reference data set matrix multiply on CPU
