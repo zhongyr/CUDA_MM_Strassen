@@ -454,7 +454,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
     checkCudaErrors(cudaMalloc((void **) &d_C, mem_size_C));
 
     // create and start timer
-    printf("Computing result using CUBLAS...");
+    printf("Computing result using myMM...");
     // execute the kernel
     size_t m = matrix_size.uiHA;
     size_t k = matrix_size.uiWA;
