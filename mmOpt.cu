@@ -473,7 +473,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cublasCreate(&handle));
         int blocks = m*n/256;
         // warm up
-        myMM_kernel<<<>>>
+        myMM_kernel<<<k,n>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
         // Allocate CUDA events that we'll use for timing
         checkCudaErrors(cudaEventCreate(&start));
@@ -483,7 +483,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cudaEventRecord(start, NULL));
         for (int j = 0; j < nIter; j++)
         {
-            myMM_kernel<<<>>>
+            myMM_kernel<<<k,n>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
 
         }
