@@ -1,0 +1,100 @@
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(128,96), MatrixB(96,64), MatrixC(128,64)
+Computing result using CUBLAS...done.
+Performance= 299.22 GFlop/s, Time= 0.005 msec, Size= 1572864 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(256,192), MatrixB(192,128), MatrixC(256,128)
+Computing result using CUBLAS...done.
+Performance= 988.31 GFlop/s, Time= 0.013 msec, Size= 12582912 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(384,288), MatrixB(288,192), MatrixC(384,192)
+Computing result using CUBLAS...done.
+Performance= 1172.63 GFlop/s, Time= 0.036 msec, Size= 42467328 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(512,384), MatrixB(384,256), MatrixC(512,256)
+Computing result using CUBLAS...done.
+Performance= 2093.06 GFlop/s, Time= 0.048 msec, Size= 100663296 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(640,480), MatrixB(480,320), MatrixC(640,320)
+Computing result using CUBLAS...done.
+Performance= 3278.32 GFlop/s, Time= 0.060 msec, Size= 196608000 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(768,576), MatrixB(576,384), MatrixC(768,384)
+Computing result using CUBLAS...done.
+Performance= 4662.03 GFlop/s, Time= 0.073 msec, Size= 339738624 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(896,672), MatrixB(672,448), MatrixC(896,448)
+Computing result using CUBLAS...done.
+Performance= 5551.55 GFlop/s, Time= 0.097 msec, Size= 539492352 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(1024,768), MatrixB(768,512), MatrixC(1024,512)
+Computing result using CUBLAS...done.
+Performance= 6674.16 GFlop/s, Time= 0.121 msec, Size= 805306368 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(1152,864), MatrixB(864,576), MatrixC(1152,576)
+Computing result using CUBLAS...done.
+Performance= 6702.42 GFlop/s, Time= 0.171 msec, Size= 1146617856 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+[Matrix Multiply CUBLAS] - Starting...
+GPU Device 0: "Tesla V100-PCIE-16GB" with compute capability 7.0
+
+MatrixA(1280,960), MatrixB(960,640), MatrixC(1280,640)
+Computing result using CUBLAS...done.
+Performance= 8328.21 GFlop/s, Time= 0.189 msec, Size= 1572864000 Ops
+Computing result using host CPU...done.
+Comparing CUBLAS Matrix Multiply with CPU results: PASS
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.

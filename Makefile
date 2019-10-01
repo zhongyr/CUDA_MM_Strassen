@@ -114,7 +114,7 @@ mmNaive.o:mmNaive.cu
 mmNaive: mmNaive.o 
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 
-mmOpt.o:mmOpy.cu
+mmOpt.o: mmOpy.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
 mmOpt: mmOpt.o 
