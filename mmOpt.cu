@@ -403,7 +403,7 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
     extern __shared__ float mRow[];
     const int tid = threadIdx.x;
     const int row = blockIdx.x;
-    
+    //printf("pid %d",tid);    
     int i;
     for (i=tid;i<k;i+=blockDim.x){
         mRow[i]=A[row*lda+i];
@@ -411,11 +411,12 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
     __syncthreads(); //load one row to the blocks shared memory
 
     int j;
-    for(j=tid;i<n;j+=blockDim.x){ // every thread compute WB/blockDim columns in B. 
+    for(j=tid;j<n;j+=blockDim.x){ // every thread compute WB/blockDim columns in B. 
         float t = 0;
         for (i=0;i<k;i++){
-            t += mRow[i]*B[i*ldb+j];
+            t+=mRow[i]*B[i*ldb+j];
         }
+        //printf("%f",t);
         C[row*ldc+j] = t;
     }
 }
@@ -473,7 +474,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cublasCreate(&handle));
         int blocks = m*n/256;
         // warm up
-        myMM_kernel<<<k,256>>>
+        myMM_kernel<<<m,n,k*sizeof(float)>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
         // Allocate CUDA events that we'll use for timing
         checkCudaErrors(cudaEventCreate(&start));
@@ -483,7 +484,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cudaEventRecord(start, NULL));
         for (int j = 0; j < nIter; j++)
         {
-            myMM_kernel<<<k,256>>>
+        myMM_kernel<<<m,n,k*sizeof(float)>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
 
         }
@@ -491,9 +492,9 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
 
         // Record the stop event
         checkCudaErrors(cudaEventRecord(stop, NULL));
-
-        // Wait for the stop event to complete
         checkCudaErrors(cudaEventSynchronize(stop));
+        // Wait for the stop event to complete
+        //cudaEventSynchronize(stop);
 
         float msecTotal = 0.0f;
         checkCudaErrors(cudaEventElapsedTime(&msecTotal, start, stop));
