@@ -402,7 +402,7 @@ int main(int argc, char **argv)
 __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, int lda,const float* B, int ldb, float* C, int ldc){
     extern __shared__ float mRow[];
     const int tid = threadIdx.x;
-    const int bid = blockIdx.x;
+    const int row = blockIdx.x;
     
     int i;
     for (i=tid;i<k;i+=blockDim.x){
@@ -414,7 +414,7 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
     for(j=tid;i<n;j+=blockDim.x){ // every thread compute WB/blockDim columns in B. 
         float t = 0;
         for (i=0;i<k;i++){
-            t += data[i]*B[i*ldb+j];
+            t += mRow[i]*B[i*ldb+j];
         }
         C[row*ldc+j] = t;
     }
