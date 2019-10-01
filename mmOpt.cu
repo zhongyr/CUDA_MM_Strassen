@@ -59,7 +59,7 @@
 // CUDA and CUBLAS functions
 #include <helper_functions.h>
 #include <helper_cuda.h>
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 #ifndef min
 #define min(a,b) ((a < b) ? a : b)
 #endif
@@ -350,7 +350,7 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size)
 
     printf("Comparing CUBLAS Matrix Multiply with CPU results: %s\n", (true == resCUBLAS) ? "PASS" : "FAIL");
 
-    printf("\nNOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.\n");
+    printf("\nNOTE: The CUDA Samples are not meant performance measurements. Results may vary when GPU Boost is enabled.\n");
 
     // clean up memory
     free(h_A);
@@ -430,7 +430,7 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
         return;
     }
     const int row_start = bid_y * blockDim.y*lda;
-    const int row_end = begin_a + lda - 1;
+    const int row_end = row_start + lda - 1;
     const int row_step = blockDim.x;
     
     const int column_start = bid_x * blockDim.x;
@@ -446,9 +446,10 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
         for(k=0;k<BLOCK_SIZE;k++){
             t += matA[tid_y][k]*matB[k][tid_x];
         }
+        //printf("%f\n",t);
         __syncthreads;
     }
-    C[bid_y*blockDim.y*n+j+tid_y*ldb+tid_x] = t;
+    C[bid_y*blockDim.y*ldb+column_start+tid_y*ldb+tid_x] = t;
 }
 
 int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
