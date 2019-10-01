@@ -59,7 +59,7 @@
 // CUDA and CUBLAS functions
 #include <helper_functions.h>
 #include <helper_cuda.h>
-
+#define BLOCK_SIZE 16
 #ifndef min
 #define min(a,b) ((a < b) ? a : b)
 #endif
@@ -400,13 +400,13 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////////////////////////////////////////
 
 __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, int lda,const float* B, int ldb, float* C, int ldc){
-    extern __shared__ float mRow[];
+    /*extern __shared__ float mRow[];
     const int tid = threadIdx.x;
     const int row = blockIdx.x;
     //printf("pid %d",tid);    
     int i;
     for (i=tid;i<k;i+=blockDim.x){
-        mRow[i]=A[row*lda+i];
+        mRow[i]=A[row*lda+i]; 
     }
     __syncthreads(); //load one row to the blocks shared memory
 
@@ -418,7 +418,37 @@ __global__ static void myMM_kernel(size_t m, size_t n, size_t k,const float* A, 
         }
         //printf("%f",t);
         C[row*ldc+j] = t;
+    }*/
+    __shared__ float matA[BLOCK_SIZE][BLOCK_SIZE];  
+    __shared__ float matB[BLOCK_SIZE][BLOCK_SIZE];  
+    int bid_x = blockIdx.x;
+    int bid_y = blockIdx.y;
+    int tid_x = threadIdx.x;
+    int tid_y = threadIdx.y;
+    if ((tid_y + bid_y * blockDim.y) * ldb + bid_x * blockDim.x + tid_x >= m * n)
+    {
+        return;
     }
+    const int row_start = bid_y * blockDim.y*lda;
+    const int row_end = begin_a + lda - 1;
+    const int row_step = blockDim.x;
+    
+    const int column_start = bid_x * blockDim.x;
+    const int column_step = blockDim.y * ldb;
+
+    float t = 0;
+    int i,j;
+    for(i=row_start,j=column_start;i<row_end;i+=row_step,j+=column_step){ //control flow for change sub matrix
+        matA[tid_y][tid_x] = A[i+tid_y*lda+tid_x]; 
+        matB[tid_y][tid_x] = B[j+tid_y*ldb+tid_x];
+        __syncthreads();
+        int k;
+        for(k=0;k<BLOCK_SIZE;k++){
+            t += matA[tid_y][k]*matB[k][tid_x];
+        }
+        __syncthreads;
+    }
+    C[bid_y*blockDim.y*n+j+tid_y*ldb+tid_x] = t;
 }
 
 int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
@@ -474,7 +504,9 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cublasCreate(&handle));
         int blocks = m*n/256;
         // warm up
-        myMM_kernel<<<m,n,k*sizeof(float)>>>
+        dim3 block(BLOCK_SIZE, BLOCK_SIZE);
+        dim3 grid((n + BLOCK_SIZE - 1) / BLOCK_SIZE, (m + BLOCK_SIZE - 1) / BLOCK_SIZE);
+        myMM_kernel<<<grid,block>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
         // Allocate CUDA events that we'll use for timing
         checkCudaErrors(cudaEventCreate(&start));
@@ -484,7 +516,7 @@ int myMM(int argc, char **argv, int devID, sMatrixSize &matrix_size){
         checkCudaErrors(cudaEventRecord(start, NULL));
         for (int j = 0; j < nIter; j++)
         {
-        myMM_kernel<<<m,n,k*sizeof(float)>>>
+        myMM_kernel<<<grid,block>>>
         (m,n,k,d_A,lda,d_B,ldb,d_C,ldc);
 
         }
