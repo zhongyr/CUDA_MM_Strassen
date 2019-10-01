@@ -89,7 +89,7 @@ LIBRARIES += -lcublas
 # Target rules
 all: build
 
-build: mmCUBLAS mmNaive
+build: mmCUBLAS mmNaive mmOpt
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -112,6 +112,12 @@ mmNaive.o:mmNaive.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
 mmNaive: mmNaive.o 
+	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+
+mmOpt.o:mmOpy.cu
+	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+
+mmOpt: mmOpt.o 
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 
 
